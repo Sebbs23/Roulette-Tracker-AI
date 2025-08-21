@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roulette Tracker AI</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #111;
+      color: #f5f5f5;
+    }
+    h1 {
+      color: #ffcc00;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      margin: 5px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 10px;
+      cursor: pointer;
+      background: #ffcc00;
+      border: none;
+      border-radius: 5px;
+    }
+    #history {
+      margin-top: 20px;
+      padding: 10px;
+      background: #222;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Roulette Tracker AI</h1>
+  <p>Enter the number that just came out:</p>
+  <input type="number" id="spinInput" min="0" max="36" placeholder="0 - 36">
+  <button onclick="addSpin()">Add Spin</button>
+
+  <div id="history">
+    <h2>History</h2>
+    <p id="spinsList">No numbers yet...</p>
+    <h2>Hot Numbers</h2>
+    <p id="hotNumbers">-</p>
+    <h2>Cold Numbers</h2>
+    <p id="coldNumbers">-</p>
+  </div>
+
+  <script>
+    let spins = [];
+
+    function addSpin() {
+      const input = document.getElementById("spinInput");
+      const number = parseInt(input.value);
+      if (isNaN(number) || number < 0 || number > 36) {
+        alert("Enter a valid number between 0 and 36");
+        return;
+      }
+      spins.push(number);
+      input.value = "";
+      updateDisplay();
+    }
+
+    function updateDisplay() {
+      document.getElementById("spinsList").innerText = spins.join(", ");
+
+      let counts = {};
+      for (let i = 0; i <= 36; i++) counts[i] = 0;
+      spins.forEach(n => counts[n]++);
+
+      let sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]);
+
+      let hot = sorted.slice(0,5).map(x => x[0]);
+      let cold = sorted.slice(-5).map(x => x[0]);
+
+      document.getElementById("hotNumbers").innerText = hot.join(", ");
+      document.getElementById("coldNumbers").innerText = cold.join(", ");
+    }
+  </script>
+</body>
+</html>
